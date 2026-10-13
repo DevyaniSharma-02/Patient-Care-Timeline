@@ -1,0 +1,412 @@
+<template>
+
+    <lightning-card
+        title="Patient Care Timeline"
+        icon-name="standard:case">
+
+        <template if:true={isLoading}>
+            <lightning-spinner
+                alternative-text="Loading Patient Care Timeline"
+                size="medium">
+            </lightning-spinner>
+        </template>
+
+        <template if:true={error}>
+            <div class="error-message">
+                Unable to load Patient Care Timeline.
+            </div>
+        </template>
+
+        <template if:true={journey}>
+
+            <!-- Journey Header -->
+            <div class="journey-header">
+
+                <div class="journey-title">
+                    <h1>{journey.Name}</h1>
+
+                    <p class="patient-name">
+                        Patient: {journey.Patient_Name__c}
+                    </p>
+                </div>
+
+                <div class="journey-badges">
+
+                    <span class="status-badge">
+                        {journey.Status__c}
+                    </span>
+
+                    <span class="risk-badge">
+                        Risk: {journey.Risk_Level__c}
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- Journey Summary -->
+            <div class="journey-summary">
+
+                <div class="summary-item">
+                    <span class="summary-label">
+                        Current Stage
+                    </span>
+
+                    <span class="summary-value">
+                        {journey.Current_Stage__c}
+                    </span>
+                </div>
+
+
+                <div class="summary-item">
+                    <span class="summary-label">
+                        Admission Date
+                    </span>
+
+                    <lightning-formatted-date-time
+                        class="summary-value"
+                        value={journey.Admission_Date__c}
+                        year="numeric"
+                        month="short"
+                        day="2-digit">
+                    </lightning-formatted-date-time>
+                </div>
+
+
+                <div class="summary-item">
+                    <span class="summary-label">
+                        Expected Discharge
+                    </span>
+
+                    <template if:true={journey.Expected_Discharge_Date__c}>
+                        <lightning-formatted-date-time
+                            class="summary-value"
+                            value={journey.Expected_Discharge_Date__c}
+                            year="numeric"
+                            month="short"
+                            day="2-digit">
+                        </lightning-formatted-date-time>
+                    </template>
+
+                    <template if:false={journey.Expected_Discharge_Date__c}>
+                        <span class="summary-value">
+                            Not Set
+                        </span>
+                    </template>
+                </div>
+
+
+                <div class="summary-item">
+                    <span class="summary-label">
+                        Assigned Doctor
+                    </span>
+
+                    <template if:true={journey.Assigned_Doctor__r}>
+                        <span class="summary-value">
+                            {journey.Assigned_Doctor__r.Name}
+                        </span>
+                    </template>
+
+                    <template if:false={journey.Assigned_Doctor__r}>
+                        <span class="summary-value">
+                            Not Assigned
+                        </span>
+                    </template>
+                </div>
+
+            </div>
+
+
+            <!-- Journey Stages -->
+            <div class="section-heading">
+                <h2>Journey Stages</h2>
+
+                <span class="stage-count">
+                    {stages.length} Stages
+                </span>
+            </div>
+
+
+            <template if:true={stages}>
+
+                <div class="timeline">
+
+                    <template
+                        for:each={stages}
+                        for:item="stage">
+
+                        <div
+                            class="stage-card"
+                            key={stage.Id}>
+
+                            <!-- Stage Header -->
+                            <div class="stage-header">
+
+                                <div class="stage-number">
+                                    {stage.Sequence__c}
+                                </div>
+
+                                <div class="stage-heading">
+
+                                    <h3>
+                                        {stage.Name}
+                                    </h3>
+
+                                    <span class="stage-status">
+                                        {stage.Status__c}
+                                    </span>
+
+                                </div>
+
+                                <div class="stage-sla">
+
+                                    <span class="sla-label">
+                                        SLA
+                                    </span>
+
+                                    <span class="sla-value">
+                                        {stage.SLA_Status__c}
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- Stage Information -->
+                            <div class="stage-details">
+
+                                <div class="stage-detail">
+                                    <span class="detail-label">
+                                        Start Date
+                                    </span>
+
+                                    <template if:true={stage.Start_Date__c}>
+                                        <lightning-formatted-date-time
+                                            class="detail-value"
+                                            value={stage.Start_Date__c}
+                                            year="numeric"
+                                            month="short"
+                                            day="2-digit">
+                                        </lightning-formatted-date-time>
+                                    </template>
+
+                                    <template if:false={stage.Start_Date__c}>
+                                        <span class="detail-value">
+                                            Not Started
+                                        </span>
+                                    </template>
+                                </div>
+
+
+                                <div class="stage-detail">
+                                    <span class="detail-label">
+                                        End Date
+                                    </span>
+
+                                    <template if:true={stage.End_Date__c}>
+                                        <lightning-formatted-date-time
+                                            class="detail-value"
+                                            value={stage.End_Date__c}
+                                            year="numeric"
+                                            month="short"
+                                            day="2-digit">
+                                        </lightning-formatted-date-time>
+                                    </template>
+
+                                    <template if:false={stage.End_Date__c}>
+                                        <span class="detail-value">
+                                            Not Completed
+                                        </span>
+                                    </template>
+                                </div>
+
+
+                                <div class="stage-detail">
+                                    <span class="detail-label">
+                                        SLA Hours
+                                    </span>
+
+                                    <span class="detail-value">
+                                        {stage.SLA_Hours__c}
+                                    </span>
+                                </div>
+
+
+                                <div class="stage-detail">
+                                    <span class="detail-label">
+                                        SLA Due Date
+                                    </span>
+
+                                    <template if:true={stage.SLA_Due_Date__c}>
+                                        <lightning-formatted-date-time
+                                            class="detail-value"
+                                            value={stage.SLA_Due_Date__c}
+                                            year="numeric"
+                                            month="short"
+                                            day="2-digit"
+                                            hour="2-digit"
+                                            minute="2-digit">
+                                        </lightning-formatted-date-time>
+                                    </template>
+
+                                    <template if:false={stage.SLA_Due_Date__c}>
+                                        <span class="detail-value">
+                                            Not Set
+                                        </span>
+                                    </template>
+                                </div>
+
+                            </div>
+
+
+                            <!-- Care Tasks -->
+                            <div class="tasks-section">
+
+                                <div class="tasks-heading">
+                                    <h4>Care Tasks</h4>
+
+                                    <span class="task-count">
+                                        {stage.taskCount} Tasks
+                                    </span>
+                                </div>
+
+
+                                <template if:true={stage.tasks}>
+
+                                    <template
+                                        for:each={stage.tasks}
+                                        for:item="task">
+
+                                        <div
+                                            class="task-card"
+                                            key={task.Id}>
+
+                                            <div class="task-main">
+
+                                                <div class="task-icon">
+                                                    <lightning-icon
+                                                        icon-name="standard:task"
+                                                        size="small"
+                                                        alternative-text="Care Task">
+                                                    </lightning-icon>
+                                                </div>
+
+                                                <div class="task-content">
+
+                                                    <h5>
+                                                        {task.Name}
+                                                    </h5>
+
+                                                    <div class="task-details">
+
+                                                        <div class="task-detail">
+                                                            <span class="detail-label">
+                                                                Priority
+                                                            </span>
+
+                                                            <span class="detail-value">
+                                                                {task.priorityLabel}
+                                                            </span>
+                                                        </div>
+
+
+                                                        <div class="task-detail">
+                                                            <span class="detail-label">
+                                                                Assigned To
+                                                            </span>
+
+                                                            <span class="detail-value">
+                                                                {task.assignedToName}
+                                                            </span>
+                                                        </div>
+
+
+                                                        <div class="task-detail">
+                                                            <span class="detail-label">
+                                                                Due Date
+                                                            </span>
+
+                                                            <template if:true={task.Due_Date__c}>
+                                                                <lightning-formatted-date-time
+                                                                    class="detail-value"
+                                                                    value={task.Due_Date__c}
+                                                                    year="numeric"
+                                                                    month="short"
+                                                                    day="2-digit"
+                                                                    hour="2-digit"
+                                                                    minute="2-digit">
+                                                                </lightning-formatted-date-time>
+                                                            </template>
+
+                                                            <template if:false={task.Due_Date__c}>
+                                                                <span class="detail-value">
+                                                                    No Due Date
+                                                                </span>
+                                                            </template>
+                                                        </div>
+
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+
+                                            <!-- Task Status -->
+                                            <div class="task-status-control">
+
+                                                <label>
+                                                    Status
+                                                </label>
+
+                                                <lightning-combobox
+                                                    variant="label-hidden"
+                                                    value={task.Status__c}
+                                                    options={statusOptions}
+                                                    data-task-id={task.Id}
+                                                    onchange={handleTaskStatusChange}>
+                                                </lightning-combobox>
+
+                                            </div>
+
+                                        </div>
+
+                                    </template>
+
+                                </template>
+
+
+                                <template if:false={stage.tasks}>
+
+                                    <div class="empty-tasks">
+                                        No Care Tasks Available
+                                    </div>
+
+                                </template>
+
+                            </div>
+
+                        </div>
+
+                    </template>
+
+                </div>
+
+            </template>
+
+
+            <template if:false={stages}>
+
+                <div class="empty-stages">
+                    No Journey Stages Available
+                </div>
+
+            </template>
+
+        </template>
+
+    </lightning-card>
+
+</template>

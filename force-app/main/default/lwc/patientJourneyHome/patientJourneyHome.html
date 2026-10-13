@@ -1,0 +1,272 @@
+<template>
+    <div class="home-container">
+
+        <!-- HERO -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="eyebrow">
+                    PATIENT CARE TIMELINE
+                </div>
+
+                <h1>Welcome to Patient Care Timeline</h1>
+
+                <p class="hero-text">
+                    Manage patient journeys, care stages, tasks, discharge planning,
+                    and follow-up activities from one centralized workspace.
+                </p>
+
+                <div class="hero-badges">
+                    <span>Healthcare Workflow</span>
+                    <span>Real-Time Tracking</span>
+                    <span>SLA Monitoring</span>
+                </div>
+            </div>
+
+            <div class="hero-icon">
+                <lightning-icon
+                    icon-name="standard:health_cloud"
+                    alternative-text="Patient Care"
+                    size="large">
+                </lightning-icon>
+            </div>
+        </section>
+
+
+        <!-- SUMMARY CARDS -->
+        <section class="summary-section">
+
+            <div class="summary-card">
+                <div class="summary-icon patient-icon">
+                    <lightning-icon
+                        icon-name="standard:account"
+                        alternative-text="Patient Journeys"
+                        size="small">
+                    </lightning-icon>
+                </div>
+
+                <div class="summary-content">
+                    <span class="summary-label">PATIENT JOURNEYS</span>
+                    <strong>Manage</strong>
+                    <p>Patient care records</p>
+                </div>
+            </div>
+
+
+            <div class="summary-card">
+                <div class="summary-icon stage-icon">
+                    <lightning-icon
+                        icon-name="standard:steps"
+                        alternative-text="Journey Stages"
+                        size="small">
+                    </lightning-icon>
+                </div>
+
+                <div class="summary-content">
+                    <span class="summary-label">JOURNEY STAGES</span>
+                    <strong>Track</strong>
+                    <p>Care progression</p>
+                </div>
+            </div>
+
+
+            <div class="summary-card">
+                <div class="summary-icon task-icon">
+                    <lightning-icon
+                        icon-name="standard:task"
+                        alternative-text="Care Tasks"
+                        size="small">
+                    </lightning-icon>
+                </div>
+
+                <div class="summary-content">
+                    <span class="summary-label">CARE TASKS</span>
+                    <strong>Monitor</strong>
+                    <p>Assigned activities</p>
+                </div>
+            </div>
+
+
+            <div class="summary-card">
+                <div class="summary-icon transaction-icon">
+                    <lightning-icon
+                        icon-name="standard:currency"
+                        alternative-text="Transactions"
+                        size="small">
+                    </lightning-icon>
+                </div>
+
+                <div class="summary-content">
+                    <span class="summary-label">TRANSACTIONS</span>
+                    <strong>Review</strong>
+                    <p>Patient payments</p>
+                </div>
+            </div>
+
+        </section>
+
+
+        <!-- QUICK ACTIONS -->
+        <section class="section-card">
+
+            <div class="section-header">
+                <div>
+                    <span class="section-eyebrow">QUICK ACCESS</span>
+                    <h2>Manage Patient Care</h2>
+                    <p>
+                        Quickly access the main areas of the Patient Care Timeline application.
+                    </p>
+                </div>
+            </div>
+
+            <div class="quick-actions">
+
+                <button class="action-card" onclick={openPatientJourneys}>
+                    <div class="action-icon">
+                        <lightning-icon
+                            icon-name="standard:account"
+                            alternative-text="Patient Journeys"
+                            size="medium">
+                        </lightning-icon>
+                    </div>
+
+                    <div>
+                        <span>Patient Journeys</span>
+                        <small>View and manage patient records</small>
+                    </div>
+
+                    <div class="arrow">→</div>
+                </button>
+
+
+                <button class="action-card" onclick={openJourneyStages}>
+                    <div class="action-icon">
+                        <lightning-icon
+                            icon-name="standard:steps"
+                            alternative-text="Journey Stages"
+                            size="medium">
+                        </lightning-icon>
+                    </div>
+
+                    <div>
+                        <span>Journey Stages</span>
+                        <small>Track every stage of patient care</small>
+                    </div>
+
+                    <div class="arrow">→</div>
+                </button>
+
+
+                <button class="action-card" onclick={openCareTasks}>
+                    <div class="action-icon">
+                        <lightning-icon
+                            icon-name="standard:task"
+                            alternative-text="Care Tasks"
+                            size="medium">
+                        </lightning-icon>
+                    </div>
+
+                    <div>
+                        <span>Care Tasks</span>
+                        <small>Manage assigned care activities</small>
+                    </div>
+
+                    <div class="arrow">→</div>
+                </button>
+
+
+                <button class="action-card" onclick={openTransactions}>
+                    <div class="action-icon">
+                        <lightning-icon
+                            icon-name="standard:currency"
+                            alternative-text="Transactions"
+                            size="medium">
+                        </lightning-icon>
+                    </div>
+
+                    <div>
+                        <span>Transactions</span>
+                        <small>Review patient payment records</small>
+                    </div>
+
+                    <div class="arrow">→</div>
+                </button>
+
+            </div>
+        </section>
+
+
+        <!-- WORKFLOW -->
+        <section class="section-card workflow-card">
+
+            <div class="section-header">
+                <div>
+                    <span class="section-eyebrow">CARE WORKFLOW</span>
+                    <h2>Patient Journey Workflow</h2>
+                    <p>
+                        Follow the complete patient journey from pre-admission through follow-up.
+                    </p>
+                </div>
+            </div>
+
+
+            <div class="workflow">
+
+                <div class="workflow-step active">
+                    <div class="step-number">1</div>
+                    <strong>Pre-Admission</strong>
+                    <span>Registration</span>
+                </div>
+
+                <div class="workflow-line"></div>
+
+                <div class="workflow-step">
+                    <div class="step-number">2</div>
+                    <strong>Admitted</strong>
+                    <span>Admission</span>
+                </div>
+
+                <div class="workflow-line"></div>
+
+                <div class="workflow-step">
+                    <div class="step-number">3</div>
+                    <strong>In Treatment</strong>
+                    <span>Care</span>
+                </div>
+
+                <div class="workflow-line"></div>
+
+                <div class="workflow-step">
+                    <div class="step-number">4</div>
+                    <strong>Discharge Planning</strong>
+                    <span>Planning</span>
+                </div>
+
+                <div class="workflow-line"></div>
+
+                <div class="workflow-step">
+                    <div class="step-number">5</div>
+                    <strong>Discharged</strong>
+                    <span>Completion</span>
+                </div>
+
+                <div class="workflow-line"></div>
+
+                <div class="workflow-step">
+                    <div class="step-number">6</div>
+                    <strong>Follow-up</strong>
+                    <span>Aftercare</span>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- FOOTER -->
+        <div class="home-footer">
+            <span>Patient Care Timeline</span>
+            <span>•</span>
+            <span>Salesforce Healthcare Workflow</span>
+        </div>
+
+    </div>
+</template>

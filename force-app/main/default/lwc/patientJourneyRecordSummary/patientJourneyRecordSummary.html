@@ -1,0 +1,268 @@
+<template>
+    <lightning-card
+        title="Patient Journey Overview"
+        icon-name="standard:case"
+    >
+        <div class="summary-container">
+
+            <!-- Loading -->
+            <template if:true={isLoading}>
+                <div class="loading-container">
+                    <lightning-spinner
+                        alternative-text="Loading patient journey"
+                        size="medium"
+                    ></lightning-spinner>
+                </div>
+            </template>
+
+            <!-- Error -->
+            <template if:true={errorMessage}>
+                <div class="error-message">
+                    {errorMessage}
+                </div>
+            </template>
+
+            <!-- Main Content -->
+            <template if:true={journey}>
+
+                <!-- Patient Information -->
+                <section class="summary-section">
+                    <div class="section-heading">
+                        <div class="heading-left">
+                            <lightning-icon
+                                icon-name="standard:contact"
+                                size="small"
+                            ></lightning-icon>
+
+                            <h2>Patient Information</h2>
+                        </div>
+
+                        <span class="journey-status">
+                            {journey.Status__c}
+                        </span>
+                    </div>
+
+                    <div class="information-grid">
+
+                        <div class="information-item">
+                            <span class="label">Journey Name</span>
+                            <span class="value">{journey.Name}</span>
+                        </div>
+
+                        <div class="information-item">
+                            <span class="label">Patient Name</span>
+                            <span class="value">
+                                {journey.Patient_Name__c}
+                            </span>
+                        </div>
+
+                        <div class="information-item">
+                            <span class="label">Current Stage</span>
+                            <span class="value">
+                                {journey.Current_Stage__c}
+                            </span>
+                        </div>
+
+                        <div class="information-item">
+                            <span class="label">Risk Level</span>
+                            <span class="value risk-value">
+                                {journey.Risk_Level__c}
+                            </span>
+                        </div>
+
+                        <div class="information-item">
+                            <span class="label">Admission Date</span>
+                            <lightning-formatted-date-time
+                                value={journey.Admission_Date__c}
+                                year="numeric"
+                                month="short"
+                                day="2-digit"
+                                class="value"
+                            ></lightning-formatted-date-time>
+                        </div>
+
+                        <div class="information-item">
+                            <span class="label">Expected Discharge</span>
+
+                            <template if:true={journey.Expected_Discharge_Date__c}>
+                                <lightning-formatted-date-time
+                                    value={journey.Expected_Discharge_Date__c}
+                                    year="numeric"
+                                    month="short"
+                                    day="2-digit"
+                                    class="value"
+                                ></lightning-formatted-date-time>
+                            </template>
+
+                            <template if:false={journey.Expected_Discharge_Date__c}>
+                                <span class="value">Not specified</span>
+                            </template>
+                        </div>
+
+                        <div class="information-item">
+                            <span class="label">Assigned Doctor</span>
+
+                            <template if:true={journey.Assigned_Doctor__r}>
+                                <span class="value">
+                                    {journey.Assigned_Doctor__r.Name}
+                                </span>
+                            </template>
+
+                            <template if:false={journey.Assigned_Doctor__r}>
+                                <span class="value">Not assigned</span>
+                            </template>
+                        </div>
+
+                        <div class="information-item">
+                            <span class="label">Record Owner</span>
+
+                            <template if:true={journey.Owner}>
+                                <span class="value">
+                                    {journey.Owner.Name}
+                                </span>
+                            </template>
+
+                            <template if:false={journey.Owner}>
+                                <span class="value">Not available</span>
+                            </template>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Journey Stages -->
+                <section class="summary-section">
+                    <div class="section-heading">
+                        <div class="heading-left">
+                            <lightning-icon
+                                icon-name="standard:process"
+                                size="small"
+                            ></lightning-icon>
+
+                            <h2>Journey Stages</h2>
+                        </div>
+
+                        <span class="count-label">
+                            {stages.length} Stages
+                        </span>
+                    </div>
+
+                    <template if:true={hasStages}>
+                        <div class="stage-grid">
+                            <template for:each={stages} for:item="stage">
+                                <div
+                                    class="stage-card"
+                                    key={stage.Id}
+                                >
+                                    <div class="stage-number">
+                                        {stage.Sequence__c}
+                                    </div>
+
+                                    <div class="stage-information">
+                                        <h3>{stage.Name}</h3>
+
+                                        <span class="stage-status">
+                                            {stage.Status__c}
+                                        </span>
+
+                                        <div class="stage-meta">
+                                            <span>
+                                                SLA:
+                                                {stage.SLA_Hours__c} hours
+                                            </span>
+
+                                            <span>
+                                                {stage.SLA_Status__c}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
+                    <template if:false={hasStages}>
+                        <div class="empty-message">
+                            No journey stages found.
+                        </div>
+                    </template>
+                </section>
+
+                <!-- Patient Transactions -->
+                <section class="summary-section">
+                    <div class="section-heading">
+                        <div class="heading-left">
+                            <lightning-icon
+                                icon-name="standard:currency"
+                                size="small"
+                            ></lightning-icon>
+
+                            <h2>Patient Transactions</h2>
+                        </div>
+
+                        <span class="count-label">
+                            {transactions.length} Transactions
+                        </span>
+                    </div>
+
+                    <template if:true={hasTransactions}>
+                        <div class="transaction-list">
+                            <template
+                                for:each={transactions}
+                                for:item="transaction"
+                            >
+                                <div
+                                    class="transaction-card"
+                                    key={transaction.Id}
+                                >
+                                    <div class="transaction-icon">
+                                        <lightning-icon
+                                            icon-name="standard:currency"
+                                            size="small"
+                                        ></lightning-icon>
+                                    </div>
+
+                                    <div class="transaction-details">
+                                        <h3>{transaction.Name}</h3>
+
+                                        <span>
+                                            {transaction.Transaction_Type__c}
+                                        </span>
+
+                                        <template if:true={transaction.Description__c}>
+                                            <p>
+                                                {transaction.Description__c}
+                                            </p>
+                                        </template>
+                                    </div>
+
+                                    <div class="transaction-right">
+                                        <template if:true={transaction.Amount__c}>
+                                            <lightning-formatted-number
+                                                value={transaction.Amount__c}
+                                                format-style="currency"
+                                                currency-code="INR"
+                                                class="amount"
+                                            ></lightning-formatted-number>
+                                        </template>
+
+                                        <span class="transaction-status">
+                                            {transaction.Status__c}
+                                        </span>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+
+                    <template if:false={hasTransactions}>
+                        <div class="empty-message">
+                            No patient transactions found.
+                        </div>
+                    </template>
+                </section>
+
+            </template>
+        </div>
+    </lightning-card>
+</template>
